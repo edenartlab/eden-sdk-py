@@ -1,0 +1,28 @@
+[project]
+name = "eden-sdk"
+version = "0.1.0"
+description = "Add a short description here"
+authors = [{ name = "Jonathan Miller", email = "jon@jmill.dev" }]
+dependencies = [
+    "requests>=2.31.0",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pre-commit>=3.5.0",
+    "black>=23.11.0",
+    "mypy>=1.7.0",
+    "flake8>=6.1.0",
+    "pytest>=7.4.3",
+    "notebook>=7.0.6",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
