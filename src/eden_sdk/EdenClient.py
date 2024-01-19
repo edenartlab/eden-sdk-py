@@ -5,12 +5,9 @@ from eden_sdk.methods import Methods
 
 
 class EdenClient:
-    def __init__(
-        self, api_url="https://api.eden.art", token=None, api_key=None, api_secret=None
-    ):
+    def __init__(self, api_url="https://api.eden.art", api_key=None, api_secret=None):
         super().__init__()
         self.api_url = api_url
-        self.token = token
         self.api_key = api_key
         self.api_secret = api_secret
         self.session = requests.Session()
@@ -19,6 +16,10 @@ class EdenClient:
         )
 
         self.api_keys = Methods.ApiKeys(self)
+        self.creations = Methods.Creations(self)
+        self.concepts = Methods.Concepts(self)
+        self.generators = Methods.Generators(self)
+        self.manna = Methods.Manna(self)
         self.tasks = Methods.Tasks(self)
 
     def api_call(self, method, url, data=None):
@@ -39,6 +40,9 @@ class EdenClient:
         for event in self.subscribe(taskId):
             if event["status"] == "completed":
                 return event["result"]
+
+            if event["status"] == "failed":
+                raise Exception("Error occurred while processing task")
 
     def subscribe(self, taskId):
         headers = {"X-Api-Key": self.api_key, "X-Api-Secret": self.api_secret}
