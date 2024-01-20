@@ -23,113 +23,112 @@ class Methods:
         def delete(self, apiKey):
             return self.client.api_call("POST", "apikeys/delete", {"apiKey": apiKey})
 
+    class Characters:
+        def __init__(self, client):
+            self.client = client
 
-class Characters:
-    def __init__(self, client):
-        self.client = client
+        def list(self, user_id=None, page=None, limit=None, sort=None):
+            return self.client.api_call(
+                "GET",
+                "characters",
+                {
+                    "userId": user_id,
+                    "page": page,
+                    "limit": limit,
+                    "sort": sort,
+                },
+            )
 
-    def list(self, user_id=None, page=None, limit=None, sort=None):
-        return self.client.api_call(
-            "GET",
-            "characters",
-            {
-                "userId": user_id,
-                "page": page,
-                "limit": limit,
-                "sort": sort,
-            },
-        )
+        def get(self, character_id):
+            return self.client.api_call("GET", f"characters/{character_id}")
 
-    def get(self, character_id):
-        return self.client.api_call("GET", f"characters/{character_id}")
+        def create(
+            self,
+            name,
+            image=None,
+            voice=None,
+            greeting=None,
+            dialogue=None,
+            logos_data=None,
+            is_private=None,
+        ):
+            return self.client.api_call(
+                "POST",
+                "characters",
+                {
+                    "name": name,
+                    "image": image,
+                    "voice": voice,
+                    "greeting": greeting,
+                    "dialogue": dialogue,
+                    "logosData": logos_data,
+                    "isPrivate": is_private,
+                },
+            )
 
-    def create(
-        self,
-        name,
-        image=None,
-        voice=None,
-        greeting=None,
-        dialogue=None,
-        logos_data=None,
-        is_private=None,
-    ):
-        return self.client.api_call(
-            "POST",
-            "characters",
-            {
-                "name": name,
-                "image": image,
-                "voice": voice,
-                "greeting": greeting,
-                "dialogue": dialogue,
-                "logosData": logos_data,
-                "isPrivate": is_private,
-            },
-        )
+        def update(
+            self,
+            character_id,
+            name=None,
+            image=None,
+            voice=None,
+            greeting=None,
+            dialogue=None,
+            logos_data=None,
+            is_private=None,
+        ):
+            return self.client.api_call(
+                "PATCH",
+                f"characters/{character_id}",
+                {
+                    "name": name,
+                    "image": image,
+                    "voice": voice,
+                    "greeting": greeting,
+                    "dialogue": dialogue,
+                    "logosData": logos_data,
+                    "isPrivate": is_private,
+                },
+            )
 
-    def update(
-        self,
-        character_id,
-        name=None,
-        image=None,
-        voice=None,
-        greeting=None,
-        dialogue=None,
-        logos_data=None,
-        is_private=None,
-    ):
-        return self.client.api_call(
-            "PATCH",
-            f"characters/{character_id}",
-            {
-                "name": name,
-                "image": image,
-                "voice": voice,
-                "greeting": greeting,
-                "dialogue": dialogue,
-                "logosData": logos_data,
-                "isPrivate": is_private,
-            },
-        )
+        def delete(self, character_id):
+            return self.client.api_call(
+                "POST", "characters/delete", {"characterId": character_id}
+            )
 
-    def delete(self, character_id):
-        return self.client.api_call(
-            "POST", "characters/delete", {"characterId": character_id}
-        )
+        def test(
+            self,
+            name,
+            identity,
+            message,
+            knowledge=None,
+            knowledge_summary=None,
+            attachments=None,
+        ):
+            return self.client.api_call(
+                "POST",
+                "characters/test",
+                {
+                    "name": name,
+                    "identity": identity,
+                    "message": message,
+                    "knowledge": knowledge,
+                    "knowledge_summary": knowledge_summary,
+                    "attachments": attachments,
+                },
+            )
 
-    def test(
-        self,
-        name,
-        identity,
-        message,
-        knowledge=None,
-        knowledge_summary=None,
-        attachments=None,
-    ):
-        return self.client.api_call(
-            "POST",
-            "characters/test",
-            {
-                "name": name,
-                "identity": identity,
-                "message": message,
-                "knowledge": knowledge,
-                "knowledge_summary": knowledge_summary,
-                "attachments": attachments,
-            },
-        )
-
-    def interact(self, session_id, character_id, message, attachments=None):
-        return self.client.api_call(
-            "POST",
-            "characters/interact",
-            {
-                "sessionId": session_id,
-                "characterId": character_id,
-                "message": message,
-                "attachments": attachments,
-            },
-        )
+        def interact(self, session_id, character_id, message, attachments=None):
+            return self.client.api_call(
+                "POST",
+                "characters/interact",
+                {
+                    "sessionId": session_id,
+                    "characterId": character_id,
+                    "message": message,
+                    "attachments": attachments,
+                },
+            )
 
     class Generators:
         def __init__(self, client):
