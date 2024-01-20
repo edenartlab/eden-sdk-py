@@ -16,6 +16,7 @@ class EdenClient:
         )
 
         self.api_keys = Methods.ApiKeys(self)
+        self.characters = Methods.Characters(self)
         self.creations = Methods.Creations(self)
         self.concepts = Methods.Concepts(self)
         self.generators = Methods.Generators(self)
