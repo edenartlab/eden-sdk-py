@@ -5,6 +5,8 @@ description = "Add a short description here"
 authors = [{ name = "Jonathan Miller", email = "jon@jmill.dev" }]
 dependencies = [
     "requests>=2.31.0",
+    "httpx>=0.27.0",
+    "aiofiles>=23.2.1",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

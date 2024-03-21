@@ -14,7 +14,9 @@ class Methods:
 
         def list(self, page=None, limit=None, sort=None):
             return self.client.api_call(
-                "GET", "apikeys", {"page": page, "limit": limit, "sort": sort}
+                "GET",
+                "apikeys",
+                {"page": page, "limit": limit, "sort": sort},
             )
 
         def create(self, note=None):
@@ -93,7 +95,9 @@ class Methods:
 
         def delete(self, character_id):
             return self.client.api_call(
-                "POST", "characters/delete", {"characterId": character_id}
+                "POST",
+                "characters/delete",
+                {"characterId": character_id},
             )
 
         def test(
@@ -136,7 +140,9 @@ class Methods:
 
         def list(self, page=None, limit=None, sort=None):
             return self.client.api_call(
-                "GET", "generators", {"page": page, "limit": limit, "sort": sort}
+                "GET",
+                "generators",
+                {"page": page, "limit": limit, "sort": sort},
             )
 
         def get(self, generator_name):
@@ -180,7 +186,9 @@ class Methods:
 
         def update(self, creation_id, is_private):
             return self.client.api_call(
-                "PATCH", f"creations/{creation_id}", {"isPrivate": is_private}
+                "PATCH",
+                f"creations/{creation_id}",
+                {"isPrivate": is_private},
             )
 
         def delete(self, creation_id):
@@ -227,7 +235,9 @@ class Methods:
 
         def update(self, concept_id, is_private):
             return self.client.api_call(
-                "PATCH", f"concepts/{concept_id}", {"isPrivate": is_private}
+                "PATCH",
+                f"concepts/{concept_id}",
+                {"isPrivate": is_private},
             )
 
         def delete(self, concept_id):
@@ -250,6 +260,29 @@ class Methods:
                     "concepts/reactions/remove",
                     {"conceptId": concept_id, "reaction": reaction},
                 )
+
+    class Media:
+        def __init__(self, client):
+            self.client = client
+
+        async def upload(self, file_path):
+            import httpx
+            from aiofiles import open as aio_open
+
+            async with aio_open(file_path, "rb") as f:
+                media = await f.read()
+                headers = {
+                    "x-api-key": self.client.api_key,
+                    "x-api-secret": self.client.api_secret,
+                }
+                files = {"media": ("media", media)}
+                async with httpx.AsyncClient() as client:
+                    response = await client.post(
+                        f"{self.client.api_url}/media/upload",
+                        headers=headers,
+                        files=files,
+                    )
+                return response.json()
 
     class Tasks:
         def __init__(self, client):
@@ -297,7 +330,13 @@ class Methods:
             return self.client.api_call("GET", f"tasks/{task_id}")
 
         def list(
-            self, status=None, task_id=None, type=None, page=None, limit=None, sort=None
+            self,
+            status=None,
+            task_id=None,
+            type=None,
+            page=None,
+            limit=None,
+            sort=None,
         ):
             return self.client.api_call(
                 "GET",

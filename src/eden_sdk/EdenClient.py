@@ -1,6 +1,6 @@
 import json
-import requests
 
+import requests
 from eden_sdk.methods import Methods
 
 
@@ -12,7 +12,7 @@ class EdenClient:
         self.api_secret = api_secret
         self.session = requests.Session()
         self.session.headers.update(
-            {"X-Api-Key": self.api_key, "X-Api-Secret": self.api_secret}
+            {"X-Api-Key": self.api_key, "X-Api-Secret": self.api_secret},
         )
 
         self.api_keys = Methods.ApiKeys(self)
@@ -22,6 +22,7 @@ class EdenClient:
         self.generators = Methods.Generators(self)
         self.manna = Methods.Manna(self)
         self.tasks = Methods.Tasks(self)
+        self.media = Methods.Media(self)
 
     def api_call(self, method, url, data=None):
         response = self.session.request(method, f"{self.api_url}/{url}", json=data)

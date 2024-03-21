@@ -1,13 +1,16 @@
 # test_edenclient.py
-import pytest
 from typing import List
+
+import pytest
 from eden_sdk.EdenClient import EdenClient
 
 
 @pytest.fixture
 def eden():
     return EdenClient(
-        api_url="http://localhost:5050", api_key="admin", api_secret="admin"
+        api_url="http://localhost:5050",
+        api_key="admin",
+        api_secret="admin",
     )
 
 
