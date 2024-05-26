@@ -50,10 +50,12 @@ class EdenClient:
         headers = {"X-Api-Key": self.api_key, "X-Api-Secret": self.api_secret}
         url = f"{self.api_url}/tasks/events?taskId={taskId}"
         response = requests.get(url, headers=headers, stream=True)
-
+        event_data = None
         for line in response.iter_lines():
             if line:  # filter out keep-alive new lines
                 line = line.decode("utf-8")
-                if line.startswith("data:"):
-                    json_data = line[5:]  # strip off "data:" prefix
+                if line.startswith("event:"):
+                    event_data = line[6:].strip()  # cache the event data, strip off "event:" prefix
+                elif line.startswith("data:") and event_data == 'task-update':
+                    json_data = line[6:]  # strip off "data:" prefix
                     yield json.loads(json_data)

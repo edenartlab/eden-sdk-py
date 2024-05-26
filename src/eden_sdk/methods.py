@@ -283,51 +283,52 @@ class Methods:
 #                         files=files,
 #                     )
 #                 return response.json()
-class Media:
-    def __init__(self, client):
-        self.client = client
 
-    async def upload(self, file_path):
-        import aiohttp
-        import aiofiles
-        from aiohttp import FormData
+    class Media:
+        def __init__(self, client):
+            self.client = client
 
-        async with aiofiles.open(file_path, mode='rb') as f:
-            media = await f.read()
-            headers = {
-                "x-api-key": self.client.api_key,
-                "x-api-secret": self.client.api_secret,
-            }
-            async with aiohttp.ClientSession() as session:
-                # using the aiohttp client to make the sign_request
-                sign_response = await session.get(
-                    f"{self.client.api_url}/media/upload/sign-request",
-                    headers=headers,
-                )
-                if sign_response.status != 200:
-                    raise Exception('Sign request failed')
+        async def upload(self, file_path):
+            import aiohttp
+            import aiofiles
+            from aiohttp import FormData
 
-                sign_data = await sign_response.json()
-                apiKey, timestamp, signature, cloudName = sign_data['apiKey'], sign_data['timestamp'], sign_data['signature'], sign_data['cloudName']
+            async with aiofiles.open(file_path, mode='rb') as f:
+                media = await f.read()
+                headers = {
+                    "x-api-key": self.client.api_key,
+                    "x-api-secret": self.client.api_secret,
+                }
+                async with aiohttp.ClientSession() as session:
+                    # using the aiohttp client to make the sign_request
+                    sign_response = await session.get(
+                        f"{self.client.api_url}/media/upload/sign-request",
+                        headers=headers,
+                    )
+                    if sign_response.status != 200:
+                        raise Exception('Sign request failed')
 
-                # Creating the FormData for the upload request
-                data = FormData()
-                data.add_field('file', media, filename='media')
-                data.add_field('api_key', apiKey)
-                data.add_field('timestamp', timestamp)
-                data.add_field('signature', signature)
-                data.add_field('folder', 'user_uploads')
+                    sign_data = await sign_response.json()
+                    apiKey, timestamp, signature, cloudName = sign_data['apiKey'], sign_data['timestamp'], sign_data['signature'], sign_data['cloudName']
 
-                # Making the upload request
-                upload_response = await session.post(
-                    f"https://api.cloudinary.com/v1_1/{cloudName}/auto/upload",
-                    data=data(),
-                    headers={
-                        'Content-Type': 'multipart/form-data',
-                    }
-                )
+                    # Creating the FormData for the upload request
+                    data = FormData()
+                    data.add_field('file', media, filename='media')
+                    data.add_field('api_key', apiKey)
+                    data.add_field('timestamp', timestamp)
+                    data.add_field('signature', signature)
+                    data.add_field('folder', 'user_uploads')
 
-                return await upload_response.json()
+                    # Making the upload request
+                    upload_response = await session.post(
+                        f"https://api.cloudinary.com/v1_1/{cloudName}/auto/upload",
+                        data=data(),
+                        headers={
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    )
+
+                    return await upload_response.json()
 
     class Tasks:
         def __init__(self, client):
